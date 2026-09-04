@@ -1,6 +1,9 @@
 name: build Realm of Peace Windows
 
 on:
+  push:
+    branches:
+      - realm-branding
   workflow_dispatch:
 
 permissions:
