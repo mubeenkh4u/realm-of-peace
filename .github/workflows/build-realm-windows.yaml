@@ -1,0 +1,75 @@
+name: build Realm of Peace Windows
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    runs-on: windows-2025
+    timeout-minutes: 120
+
+    env:
+      BUILD_CHANNEL: stable
+      RELEASE_CHANNEL: stable
+      PUBLIC_RELEASE_CHANNEL: stable
+      BUILD_VERSION: 0.1.0
+      PUBLIC_BUILD_VERSION: 0.1.0
+      ELECTRON_ARCH: x64
+      FLUXER_SKIP_NATIVE: "false"
+
+    steps:
+      - name: Checkout Realm of Peace branch
+        uses: actions/checkout@v4
+        with:
+          ref: realm-branding
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Enable pnpm through Corepack
+        shell: pwsh
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
+          pnpm --version
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.93.0"
+
+      - name: Install workspace dependencies
+        shell: pwsh
+        run: pnpm install --frozen-lockfile
+
+      - name: Build desktop application
+        shell: pwsh
+        working-directory: fluxer_desktop
+        run: pnpm build
+
+      - name: Package Realm of Peace portable app
+        shell: pwsh
+        working-directory: fluxer_desktop
+        run: pnpm exec electron-builder --win --x64 --config realm-electron-builder.config.cjs --publish never
+
+      - name: List produced files
+        shell: pwsh
+        run: Get-ChildItem -Path fluxer_desktop/dist-electron -Recurse | Select-Object FullName,Length
+
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Realm-of-Peace-Windows-x64
+          path: fluxer_desktop/dist-electron/**
+          if-no-files-found: error
+          retention-days: 14
