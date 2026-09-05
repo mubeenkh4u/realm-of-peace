@@ -15,9 +15,10 @@ jobs:
     timeout-minutes: 120
 
     env:
-      BUILD_CHANNEL: stable
-      RELEASE_CHANNEL: stable
-      PUBLIC_RELEASE_CHANNEL: stable
+      CHANNEL: canary
+      BUILD_CHANNEL: canary
+      RELEASE_CHANNEL: canary
+      PUBLIC_RELEASE_CHANNEL: canary
       BUILD_VERSION: 0.1.0
       PUBLIC_BUILD_VERSION: 0.1.0
       ELECTRON_ARCH: x64
@@ -55,7 +56,7 @@ jobs:
         shell: pwsh
         run: pnpm install --frozen-lockfile
 
-      - name: Build desktop application
+      - name: Build desktop application (canary channel)
         shell: pwsh
         working-directory: fluxer_desktop
         run: pnpm build
@@ -72,7 +73,7 @@ jobs:
       - name: Upload Windows build
         uses: actions/upload-artifact@v4
         with:
-          name: Realm-of-Peace-Windows-x64
+          name: Realm-of-Peace-Windows-x64-Canary
           path: fluxer_desktop/dist-electron/**
           if-no-files-found: error
           retention-days: 14
