@@ -1,9 +1,9 @@
 {
-	"name": "fluxer_desktop",
+	"name": "realm_of_peace_desktop",
 	"version": "0.0.0",
-	"description": "Instant messaging and VoIP application",
-	"homepage": "https://fluxer.app",
-	"author": "Fluxer Platform AB <support@fluxer.app>",
+	"description": "Realm of Peace instant messaging and VoIP desktop client",
+	"homepage": "https://github.com/mubeenkh4u/realm-of-peace",
+	"author": "Mubeen Ahmed Khan",
 	"license": "AGPL-3.0-or-later",
 	"private": true,
 	"type": "module",
